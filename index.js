@@ -2,16 +2,17 @@ const express= require("express");
 const {open}= require("sqlite");
 const sqlite3 = require("sqlite3");
 const  cors= require("cors");
-
+const bcryp = require("bcrypt");
 const path = require('path');
 
 
 const dbPath = path.join(__dirname,"User.db");
 
 const app= express();
+app.use(cors());
 
 app.use(express.json());
-app.use(cors());
+
 let database=null;
 
 
@@ -39,7 +40,7 @@ app.get('/',(request,response)=>{
     response.send('Welcome Backend App');
 })
 
-app.get('/users/',async(request,response)=>{
+app.get('/user/',async(request,response)=>{
     const sqlQuery=`SELECT * FROM User`
     const data =await database.all(sqlQuery);
     response.send(data);
@@ -64,5 +65,51 @@ app.post("/login",async(request,response)=>{
     response.send('Login Successfully');
 })
 
+
+
+app.post("/users/", async (request, response) => {
+    const { name, email} = request.body;
+    const hashedPassword = await bcrypt.hash(request.body.password, 10);
+    const selectUserQuery = `SELECT * FROM user WHERE email = '${email}'`;
+    const dbUser = await db.get(selectUserQuery);
+    if (dbUser === undefined) {
+      const createUserQuery = `
+        INSERT INTO 
+          user (username, name, password, gender, location) 
+        VALUES 
+          (
+            
+            '${name}',
+            '${email}',
+            '${hashedPassword}'
+            
+          )`;
+      const dbResponse = await db.run(createUserQuery);
+      const newUserId = dbResponse.lastID;
+      response.send(`Created new user with ${newUserId}`);
+    } else {
+      response.status = 400;
+      response.send("User already exists");
+    }
+  });
+
+
+app.post("/login", async (request, response) => {
+    const { name, password } = request.body;
+    const selectUserQuery = `SELECT * FROM user WHERE username = '${name}'`;
+    const dbUser = await db.get(selectUserQuery);
+    if (dbUser === undefined) {
+      response.status(400);
+      response.send("Invalid User");
+    } else {
+      const isPasswordMatched = await bcrypt.compare(password, dbUser.password);
+      if (isPasswordMatched === true) {
+        response.send("Login Success!");
+      } else {
+        response.status(400);
+        response.send("Invalid Password");
+      }
+    }
+  });
 
 module.exports = app;
