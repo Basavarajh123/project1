@@ -11,14 +11,15 @@ Content-Type: application/json;
     }
 ###
 
-GET  https://project1-gzhc.onrender.com/user/
+GET  https://project1-63xx.onrender.com/user
 
 
 ### POST 
-POST  https://project1-gzhc.onrender.com/login/
+POST  https://project1-63xx.onrender.com/users/
 Content-Type: application/json
 
 {
+    "name":"Brahmos",
     "email":"basavarajh556@gmail.com",
     "password":"Basu123@"
 
