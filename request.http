@@ -1,0 +1,25 @@
+
+### POST REQUEST 
+POST  https://project1-gzhc.onrender.com/login/
+Content-Type: application/json;
+
+    {
+        
+        "email":"basavarajh3378@gmail.com",
+        "password":"Brahmos"
+
+    }
+###
+
+GET  https://project1-gzhc.onrender.com/users/
+
+
+### POST 
+POST  https://project1-gzhc.onrender.com/login/
+Content-Type: application/json
+
+{
+    "email":"basavarajh556@gmail.com",
+    "password":"Basu123@"
+
+}

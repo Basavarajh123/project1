@@ -35,19 +35,19 @@ const initializationDbAndServer =async()=>{
 
 initializationDbAndServer()
 
-app.get('/',(req,res)=>{
-    res.send('Welcome Backend App');
+app.get('/',(request,response)=>{
+    response.send('Welcome Backend App');
 })
 
-app.get('/users',async(req,res)=>{
+app.get('/users/',async(request,response)=>{
     const sqlQuery=`SELECT * FROM User`
     const data =await database.all(sqlQuery);
-    res.send(data);
+    response.send(data);
 })
 
-app.post("/signup",async(req,res)=>{
+app.post("/signup/",async(request,response)=>{
 
-    const{name,email,password}= req.body;
+    const{name,email,password}= request.body;
    
     const userQuery=`INSERT INTO User(name,email,password)
                     VALUES("${name}","${email}","${password}");
@@ -57,11 +57,11 @@ app.post("/signup",async(req,res)=>{
     
 })
 
-app.post("/login",async(req,res)=>{
-    const {email,password}= req.body;
+app.post("/login",async(request,response)=>{
+    const {email,password}= request.body;
     const userQuery =`SELECT * FROM User WHERE email="${email}" AND password="${password}";`;
-    const data = await database.get(userQuery);
-    res.send('Login Successfully');
+    await database.get(userQuery);
+    response.send('Login Successfully');
 })
 
 
