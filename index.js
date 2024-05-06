@@ -80,6 +80,13 @@ app.get('/tasks/', async(req,res)=>{
   const transactionsData= await database.all(getAllTasksQuery)
   res.send(transactionsData);
 
+app.get('/tasks/:month',async(req,res)=>{
+  const {month}= req.params
+  const sqlQuery=`SELECT * FROM transactions WHERE CAST(strftime('%m', dateOfSale) AS INTEGER) = ${month}`
+  const data= await database.all(sqlQuery);
+  res.send(data)
+})
+
 })
 app.get('/stats/:month/',async(req,res)=>{
   const {month} = req.params;
